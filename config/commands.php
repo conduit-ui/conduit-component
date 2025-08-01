@@ -1,7 +1,13 @@
 <?php
 
-return [
+use LaravelZero\Framework\Commands\BuildCommand;
+use LaravelZero\Framework\Commands\InstallCommand;
+use LaravelZero\Framework\Commands\MakeCommand;
+use LaravelZero\Framework\Commands\RenameCommand;
+use LaravelZero\Framework\Commands\TestMakeCommand;
+use NunoMaduro\Collision\Adapters\Laravel\Commands\TestCommand;
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Default Command
@@ -13,7 +19,7 @@ return [
     |
     */
 
-    'default' => NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
+    "default" => NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +32,7 @@ return [
     |
     */
 
-    'paths' => [app_path('Commands')],
+    "paths" => [app_path("Commands")],
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +45,7 @@ return [
     |
     */
 
-    'add' => [
+    "add" => [
         //
     ],
 
@@ -54,7 +60,7 @@ return [
     |
     */
 
-    'hidden' => [
+    "hidden" => [
         NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
         Symfony\Component\Console\Command\DumpCompletionCommand::class,
         Symfony\Component\Console\Command\HelpCommand::class,
@@ -63,6 +69,9 @@ return [
         Illuminate\Console\Scheduling\ScheduleFinishCommand::class,
         Illuminate\Foundation\Console\VendorPublishCommand::class,
         LaravelZero\Framework\Commands\StubPublishCommand::class,
+        LaravelZero\Framework\Commands\BuildCommand::class,
+        LaravelZero\Framework\Commands\InstallCommand::class,
+        LaravelZero\Framework\Commands\RenameCommand::class,
     ],
 
     /*
@@ -76,8 +85,7 @@ return [
     |
     */
 
-    'remove' => [
+    "remove" => [
         //
     ],
-
 ];

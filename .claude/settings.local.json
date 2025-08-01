@@ -3,7 +3,8 @@
   "permissions": {
     "allow": [
       "Bash(conduit know:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(./component)"
     ],
     "deny": []
   }
