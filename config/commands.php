@@ -32,7 +32,10 @@ return [
     |
     */
 
-    "paths" => [app_path("Commands")],
+    "paths" => [
+        app_path("Commands"),
+        // Add additional command discovery paths
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -72,6 +75,24 @@ return [
         LaravelZero\Framework\Commands\BuildCommand::class,
         LaravelZero\Framework\Commands\InstallCommand::class,
         LaravelZero\Framework\Commands\RenameCommand::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Published Commands (Conduit Delegation)
+    |--------------------------------------------------------------------------
+    |
+    | Commands listed here will be available through Conduit delegation when
+    | the delegation system is released. Commands extending DelegatedCommand
+    | and marked as publishable will be automatically discovered and added here.
+    | 
+    | Liberation Philosophy: Components work standalone AND with Conduit
+    |
+    */
+    "published" => [
+        // Commands marked as publishable via DelegatedCommand::$publishable = true
+        // Will be automatically discovered and registered for delegation
+        // Example: 'component:example' => App\Commands\ExampleCommand::class,
     ],
 
     /*

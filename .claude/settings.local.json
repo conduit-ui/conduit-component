@@ -4,7 +4,17 @@
     "allow": [
       "Bash(conduit know:*)",
       "Bash(find:*)",
-      "Bash(./component)"
+      "Bash(./component)",
+      "Bash(tree:*)",
+      "Bash(conduit spotify:queue:*)",
+      "Bash(./component list)",
+      "Bash(composer show:*)",
+      "Bash(mkdir:*)",
+      "Bash(./component certify)",
+      "Bash(./vendor/bin/pest tests/Feature/ComponentTest.php:*)",
+      "Bash(./component test)",
+      "Bash(./vendor/bin/pest tests/Feature/ --no-coverage --stop-on-failure)",
+      "Bash(./component certify:simple)"
     ],
     "deny": []
   }
