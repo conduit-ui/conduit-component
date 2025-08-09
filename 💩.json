@@ -1,0 +1,31 @@
+{
+    "name": "Spotify",
+    "description": "Full-featured Spotify integration for playback control, search, and device management",
+    "version": "1.0.0",
+    "executable": "spotify",
+    "commands": {
+        "spotify:setup": "Guided setup for first-time users (recommended)",
+        "spotify:login": "Authenticate with Spotify (opens browser)",
+        "spotify:logout": "Clear stored Spotify authentication",
+        "spotify:play": "Play music on Spotify",
+        "spotify:pause": "Pause Spotify playback",
+        "spotify:current": "Show currently playing track",
+        "spotify:next": "Skip to next track",
+        "spotify:previous": "Skip to previous track",
+        "spotify:search": "Search Spotify for music",
+        "spotify:find": "Search and play music interactively",
+        "spotify:volume": "Set or check Spotify volume",
+        "spotify:devices": "List available Spotify devices"
+    },
+    "author": {
+        "name": "Jordan Partridge",
+        "email": "jordan@partridge.rocks"
+    },
+    "setup": {
+        "environment_variables": [
+            "SPOTIFY_CLIENT_ID",
+            "SPOTIFY_CLIENT_SECRET"
+        ],
+        "instructions": "Create a Spotify app at https://developer.spotify.com/dashboard and set the required environment variables"
+    }
+}

@@ -1,6 +1,6 @@
-# {{PACKAGE_NAME}}
+# conduit-spotify
 
-A Conduit component for {{DESCRIPTION}} functionality with universal output format support.
+A Conduit component for Conduit spotify integration functionality with universal output format support.
 
 ## 🚀 Features
 
@@ -14,12 +14,12 @@ A Conduit component for {{DESCRIPTION}} functionality with universal output form
 
 ### Via Conduit (Recommended)
 ```bash
-conduit install {{PACKAGE_NAME}}
+conduit install conduit-spotify
 ```
 
 ### Via Composer
 ```bash
-composer global require {{VENDOR}}/{{PACKAGE_NAME}}
+composer global require jordanpartridge/conduit-spotify
 ```
 
 ## 🎯 Usage

@@ -1,24 +1,24 @@
 {
-    "name": "{{VENDOR}}/{{PACKAGE_NAME}}",
-    "description": "A Conduit component for {{DESCRIPTION}}",
-    "keywords": ["conduit", "laravel-zero", "cli", "component", "{{KEYWORDS}}"],
-    "homepage": "https://github.com/{{VENDOR}}/{{PACKAGE_NAME}}",
+    "name": "the-shit/spotify",
+    "description": "THE SHIT Spotify integration - Spotify's Here, It's Tight",
+    "keywords": ["shit", "tight", "laravel-zero", "cli", "component", "spotify"],
+    "homepage": "https://github.com/S-H-I-T/spotify",
     "type": "library",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/{{VENDOR}}/{{PACKAGE_NAME}}/issues",
-        "source": "https://github.com/{{VENDOR}}/{{PACKAGE_NAME}}"
+        "issues": "https://github.com/S-H-I-T/spotify/issues",
+        "source": "https://github.com/S-H-I-T/spotify"
     },
     "authors": [
         {
-            "name": "{{AUTHOR_NAME}}",
-            "email": "{{AUTHOR_EMAIL}}"
+            "name": "Jordan Partridge",
+            "email": "jordan@partridge.rocks"
         }
     ],
     "require": {
         "php": "^8.2",
         "laravel-zero/framework": "^12.0",
-        "jordanpartridge/conduit-interfaces": "dev-master"
+        "guzzlehttp/guzzle": "^7.0"
     },
     "suggest": {
         "jordanpartridge/github-client": "For GitHub integration components"
@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "{{NAMESPACE}}\\": "src/"
+            "ConduitComponents\\Spotify\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "{{NAMESPACE}}\\Tests\\": "tests/"
+            "ConduitComponents\\Spotify\\Tests\\": "tests/"
         }
     },
     "config": {

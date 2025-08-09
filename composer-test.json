@@ -1,0 +1,44 @@
+{
+    "name": "test/conduit-component-test",
+    "description": "Test version of modernized component skeleton",
+    "keywords": ["conduit", "laravel-zero", "cli", "component", "test"],
+    "homepage": "https://github.com/test/conduit-component-test",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Test User",
+            "email": "test@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel-zero/framework": "^12.0",
+        "jordanpartridge/conduit-interfaces": "dev-master"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.22",
+        "mockery/mockery": "^1.6.12",
+        "pestphp/pest": "^3.8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Test\\ConduitComponentTest\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\ConduitComponentTest\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

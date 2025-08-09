@@ -1,0 +1,204 @@
+#!/usr/bin/env php
+<?php
+
+// Spotify Component Executable - Full Featured
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use ConduitComponents\Spotify\SpotifyService;
+use Symfony\Component\Process\Process;
+
+// Parse command line arguments
+$method = $argv[1] ?? 'help';
+$args = array_slice($argv, 2);
+
+// Parse options (--key=value format)  
+$options = [];
+$positionalArgs = [];
+
+foreach ($args as $arg) {
+    if (str_starts_with($arg, '--')) {
+        [$key, $value] = explode('=', substr($arg, 2), 2) + [null, true];
+        $options[$key] = $value;
+    } else {
+        $positionalArgs[] = $arg;
+    }
+}
+
+// Create service instance
+$service = new ConduitComponents\Spotify\SpotifyService();
+
+try {
+    // Handle all Spotify methods
+    $result = match ($method) {
+        'setup' => $service->setupInteractive($options['reset'] ?? false),
+        'login' => $service->login(),
+        'logout' => $service->logout(),
+        'play' => $service->play(
+            $positionalArgs[0] ?? null, 
+            $options['device'] ?? null
+        ),
+        'pause' => $service->pause($options['device'] ?? null),
+        'current' => $service->current(),
+        'next' => $service->next($options['device'] ?? null),
+        'previous' => $service->previous($options['device'] ?? null),
+        'search' => $service->search(
+            $positionalArgs[0] ?? '',
+            $options['type'] ?? 'track',
+            (int)($options['limit'] ?? 10)
+        ),
+        'find' => $service->find($positionalArgs[0] ?? ''),
+        'volume' => $service->volume(
+            $positionalArgs[0] ?? null, 
+            $options['device'] ?? null
+        ),
+        'up' => $service->volume('+10', $options['device'] ?? null),
+        'down' => $service->volume('-10', $options['device'] ?? null),
+        'mute' => $service->volume(0, $options['device'] ?? null),
+        'devices' => $service->devices(),
+        'help' => showHelp(),
+        default => ['error' => "Unknown method: {$method}. Try: help"]
+    };
+
+    // Output result
+    if (is_string($result)) {
+        echo $result . PHP_EOL;
+    } elseif (is_array($result)) {
+        if (isset($result['error'])) {
+            fwrite(STDERR, "❌ {$result['error']}" . PHP_EOL);
+            exit(1);
+        }
+        
+        // Format output based on method
+        switch ($method) {
+            case 'search':
+                formatSearchResults($result);
+                break;
+            case 'current':
+                formatCurrentTrack($result);
+                break;
+            case 'devices':
+                formatDevices($result);
+                break;
+            default:
+                echo json_encode($result, JSON_PRETTY_PRINT) . PHP_EOL;
+        }
+    }
+
+    exit(0);
+
+} catch (Exception $e) {
+    fwrite(STDERR, "❌ Error: " . $e->getMessage() . PHP_EOL);
+    exit(1);
+}
+
+function showHelp(): string 
+{
+    return <<<HELP
+🎵 Spotify Component - Full Featured
+
+SETUP & AUTHENTICATION:
+  setup                    - Guided setup for first-time users (recommended)
+  login                    - Authenticate with Spotify (opens browser)
+  logout                   - Clear stored authentication
+
+PLAYBACK CONTROL:
+  play [track/uri]         - Play track (searches if not a URI)
+    --device=ID              Device to play on
+  pause                    - Pause playback
+    --device=ID              Device to pause
+  next                     - Skip to next track
+    --device=ID              Device to control
+  previous                 - Skip to previous track
+    --device=ID              Device to control
+  volume <0-100>           - Set volume level
+    --device=ID              Device to control
+
+INFORMATION:
+  current                  - Show currently playing track
+  devices                  - List available devices
+  search <query>           - Search for music
+    --type=track             Search type (track, album, playlist)
+    --limit=10               Number of results
+  find <query>             - Search and play interactively
+
+EXAMPLES:
+  spotify setup              # First-time setup (recommended)
+  spotify login
+  spotify play "Bohemian Rhapsody"
+  spotify search "jazz" --type=playlist --limit=5
+  spotify volume 75 --device=abc123
+  spotify current
+
+SETUP:
+  1. Create a Spotify app at: https://developer.spotify.com/dashboard
+  2. Set environment variables:
+     export SPOTIFY_CLIENT_ID="your_client_id"
+     export SPOTIFY_CLIENT_SECRET="your_client_secret"
+  3. Run: spotify login
+
+HELP;
+}
+
+function formatSearchResults(array $results): void 
+{
+    if (empty($results)) {
+        echo "No results found.\n";
+        return;
+    }
+    
+    echo "\n🔍 Search Results:\n\n";
+    
+    foreach ($results as $index => $track) {
+        $num = str_pad($index + 1, 2, ' ', STR_PAD_LEFT);
+        echo "{$num}. 🎵 {$track['name']}\n";
+        echo "     🎤 {$track['artist']}\n";
+        echo "     💿 {$track['album']}\n";
+        echo "     🔗 {$track['uri']}\n";
+        echo "\n";
+    }
+    
+    echo "💡 Tip: Copy a URI and use: spotify play [URI]\n";
+}
+
+function formatCurrentTrack(array $track): void 
+{
+    if (isset($track['message'])) {
+        echo "🔇 {$track['message']}\n";
+        return;
+    }
+    
+    $status = $track['is_playing'] ? '▶️ Now Playing' : '⏸️ Paused';
+    $progress = formatTime($track['progress']) . ' / ' . formatTime($track['duration']);
+    
+    echo "\n{$status}:\n";
+    echo "🎵 {$track['name']}\n";
+    echo "🎤 {$track['artist']}\n";
+    echo "💿 {$track['album']}\n";
+    echo "⏱️ {$progress}\n";
+}
+
+function formatDevices(array $devices): void 
+{
+    if (empty($devices)) {
+        echo "No devices found. Open Spotify on any device.\n";
+        return;
+    }
+    
+    echo "\n📱 Available Devices:\n\n";
+    
+    foreach ($devices as $device) {
+        $status = $device['is_active'] ? '🟢' : '⚪';
+        echo "{$status} {$device['name']} ({$device['type']})\n";
+        echo "   ID: {$device['id']}\n";
+    }
+    
+    echo "\n💡 Tip: Use --device=ID to target a specific device\n";
+}
+
+function formatTime(int $ms): string 
+{
+    $seconds = floor($ms / 1000);
+    $minutes = floor($seconds / 60);
+    $seconds = $seconds % 60;
+    return sprintf('%d:%02d', $minutes, $seconds);
+}
