@@ -45,7 +45,7 @@ jobs:
         composer update --prefer-dist --no-interaction --no-progress
     
     - name: Run tests
-      run: vendor/bin/pest --coverage
+      run: vendor/bin/pest
       
     - name: Run PHPStan
       run: vendor/bin/phpstan analyse app --level=5

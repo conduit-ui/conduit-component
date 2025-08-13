@@ -14,31 +14,6 @@ use LaravelZero\Framework\Commands\Command;
 abstract class BaseCommand extends Command
 {
     /**
-     * Enhanced command execution with liberation metrics
-     */
-    public function handle(): int
-    {
-        $startTime = microtime(true);
-        
-        // Call parent handle which routes to appropriate output formatter
-        $result = parent::handle();
-        
-        $executionTime = microtime(true) - $startTime;
-        
-        // Log liberation metrics if verbose
-        if ($this->getOutput()->isVerbose()) {
-            $metrics = $this->getLiberationMetrics();
-            $this->line('');
-            $this->comment("⚡ Liberation Metrics:");
-            $this->line("   Time saved: {$metrics['time_saved_per_execution']}s per execution");
-            $this->line("   Complexity reduction: " . ($metrics['complexity_reduction'] * 100) . "%");
-            $this->line("   Execution time: " . round($executionTime, 3) . "s");
-        }
-        
-        return $result;
-    }
-    
-    /**
      * Get liberation metrics for this command
      * Override in concrete commands to provide specific metrics
      */
@@ -60,8 +35,7 @@ abstract class BaseCommand extends Command
             'command' => $this->getName(),
             'description' => $this->getDescription(),
             'tags' => ['command', 'liberation'],
-            'timestamp' => now()->toIso8601String(),
-            'formats_supported' => array_keys(static::getAvailableFormats()),
+            'timestamp' => date('c'),
         ];
     }
     
