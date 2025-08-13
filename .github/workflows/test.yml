@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php: [8.2, 8.3]
+        laravel: [12.0]
+    
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: mbstring, dom, fileinfo
+        coverage: pcov
+    
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+    
+    - name: Cache composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-${{ matrix.php }}-composer-
+    
+    - name: Install dependencies
+      run: |
+        composer require "laravel-zero/framework:^${{ matrix.laravel }}" --no-interaction --no-update
+        composer update --prefer-dist --no-interaction --no-progress
+    
+    - name: Run tests
+      run: vendor/bin/pest --coverage
+      
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse app --level=5
+      
+    - name: Check code style
+      run: vendor/bin/pint --test

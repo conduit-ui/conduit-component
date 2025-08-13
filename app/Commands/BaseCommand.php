@@ -2,18 +2,16 @@
 
 namespace App\Commands;
 
-use JordanPartridge\ConduitInterfaces\AbstractConduitCommand;
+use LaravelZero\Framework\Commands\Command;
 
 /**
- * BaseCommand extending AbstractConduitCommand for universal format support
+ * BaseCommand for component commands
  * 
  * This provides all components with:
- * - Universal output formats (terminal, json, table)
- * - Smart piped output detection
- * - File output capabilities
  * - Consistent CLI experience
+ * - Laravel Zero command features
  */
-abstract class BaseCommand extends AbstractConduitCommand
+abstract class BaseCommand extends Command
 {
     /**
      * Enhanced command execution with liberation metrics
