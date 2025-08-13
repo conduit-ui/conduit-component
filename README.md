@@ -1,136 +1,189 @@
-# conduit-spotify
+# 💩 Component Skeleton
 
-A Conduit component for Conduit spotify integration functionality with universal output format support.
+[![Tests](https://github.com/conduit-ui/conduit-component/actions/workflows/test.yml/badge.svg)](https://github.com/conduit-ui/conduit-component/actions/workflows/test.yml)
+[![PHP Version](https://img.shields.io/badge/PHP-8.2%2B-blue)](https://php.net)
+[![Laravel Zero](https://img.shields.io/badge/Laravel%20Zero-12.0-red)](https://laravel-zero.com)
 
-## 🚀 Features
+The official skeleton for creating components for THE SHIT ecosystem - a rapidly expandable developer toolkit.
 
-- **Universal Output Formats**: Terminal, JSON, and table formats
-- **Smart Detection**: Auto-detects piped output for jq compatibility  
-- **File Export**: Save output to files with `--output` option
-- **Liberation Metrics**: Performance and efficiency tracking
-- **Developer Experience**: Beautiful CLI interface with Laravel Prompts
+## 🚀 Quick Start
 
-## 📦 Installation
+### Using THE SHIT Scaffold Command (Recommended)
 
-### Via Conduit (Recommended)
 ```bash
-conduit install conduit-spotify
+# From THE SHIT root directory
+php 💩 component:scaffold my-component
 ```
 
-### Via Composer
+### Manual Setup
+
 ```bash
-composer global require jordanpartridge/conduit-spotify
-```
+# Clone the skeleton
+git clone https://github.com/conduit-ui/conduit-component.git my-component
+cd my-component
 
-## 🎯 Usage
-
-### Basic Commands
-```bash
-# Run with beautiful terminal output
-{{BINARY_NAME}} example
-
-# Get JSON output for automation
-{{BINARY_NAME}} example --format=json
-
-# Export to file
-{{BINARY_NAME}} example --output=data.json
-
-# Pipe to jq (auto-detected)
-{{BINARY_NAME}} example | jq '.[] | .name'
-```
-
-### Universal Format Support
-
-Every command automatically supports:
-
-- **Terminal**: Human-readable with emojis and colors
-- **JSON**: Machine-readable for automation and jq processing
-- **Table**: Structured data display with Laravel Prompts
-- **File Output**: Export capabilities for reports and analysis
-
-## 🏗️ Architecture
-
-This component is built on the **Conduit Liberation Architecture**:
-
-### AbstractConduitCommand Foundation
-All commands extend `AbstractConduitCommand` which provides:
-
-```php
-// Automatic format routing
-php {{BINARY_NAME}} command --format=json
-php {{BINARY_NAME}} command --format=table  
-php {{BINARY_NAME}} command | jq '.[]'  # Auto-detects piping!
-```
-
-### Universal Interface Pattern
-```php
-class MyCommand extends BaseCommand
-{
-    // Provide data
-    public function getData(): array { /* ... */ }
-    
-    // Custom terminal output
-    public function outputTerminal(array $data): int { /* ... */ }
-    
-    // JSON and table formats provided automatically!
-}
-```
-
-## 🔧 Development
-
-### Commands
-```bash
 # Install dependencies
 composer install
 
-# Code formatting  
-./vendor/bin/pint
+# Test it works
+./component list
+```
 
+## 📁 Structure
+
+```
+my-component/
+├── app/
+│   └── Commands/       # Your component commands (App namespace)
+├── tests/              # Pest tests
+├── component           # Executable (always named 'component')
+├── composer.json       # Dependencies and autoloading
+└── 💩.json            # Component manifest
+```
+
+## 🎯 Key Principles
+
+### 1. Laravel Zero Conventions
+- **Namespace**: Always use `App\` namespace
+- **Directory**: Commands go in `app/Commands/`
+- **Executable**: Always named `component`
+- **No custom namespaces**: Avoid `ConduitComponents\MyThing\`
+
+### 2. Component Manifest (💩.json)
+```json
+{
+    "name": "my-component",
+    "description": "What your component does",
+    "version": "1.0.0",
+    "shit_acronym": "My Yarn Component",
+    "commands": {
+        "my-component:do-thing": "Description of what this command does"
+    },
+    "requires": {
+        "php": "^8.2",
+        "laravel-zero/framework": "^12.0"
+    }
+}
+```
+
+**Important**: No `executable` field! THE SHIT knows to look for `component`.
+
+### 3. Command Structure
+
+All commands should extend the provided base classes:
+
+```php
+namespace App\Commands;
+
+class MyCommand extends BaseCommand
+{
+    protected $signature = 'do-thing {argument} {--option}';
+    protected $description = 'Does an amazing thing';
+    
+    public function handle()
+    {
+        // Your logic here
+        $this->info('Thing done!');
+        return self::SUCCESS;
+    }
+}
+```
+
+## 🧪 Testing
+
+The skeleton includes a comprehensive test suite:
+
+```bash
 # Run tests
 ./vendor/bin/pest
 
-# Component certification
-./component certify
+# With coverage
+./vendor/bin/pest --coverage
+
+# Run specific test
+./vendor/bin/pest tests/Feature/SkeletonTest.php
 ```
 
-### Liberation Philosophy
-
-This component follows the **Developer Liberation System** principles:
-
-- **Eliminate Repetition**: Universal formats remove CLI boilerplate
-- **Embrace Automation**: Perfect jq and tool integration  
-- **Measure Impact**: Built-in liberation metrics
-- **Consistent Experience**: Same patterns across all components
-
-## 📊 Liberation Metrics
-
-Run any command with `-v` to see liberation metrics:
+## 🎨 Code Quality
 
 ```bash
-{{BINARY_NAME}} example -v
-# ⚡ Liberation Metrics:
-#    Time saved: 2.5s per execution
-#    Complexity reduction: 80%
-#    Execution time: 0.045s
+# Format code
+./vendor/bin/pint
+
+# Check without fixing
+./vendor/bin/pint --test
+
+# Static analysis
+./vendor/bin/phpstan analyse
 ```
+
+## 🔧 Development Workflow
+
+1. **Create your component**
+   ```bash
+   php 💩 component:scaffold awesome-tool
+   ```
+
+2. **Add your commands**
+   ```bash
+   cd 💩-components/awesome-tool
+   php component make:command DoSomethingCommand
+   ```
+
+3. **Update manifest**
+   - Edit `💩.json` to list your commands
+   - Use descriptive command names
+
+4. **Test locally**
+   ```bash
+   ./component list
+   ./component do-something
+   ```
+
+5. **Install in THE SHIT**
+   - Component is auto-discovered if in `💩-components/` folder
+   - Run `php 💩 list` to see your commands
+
+## 📝 Common Issues & Solutions
+
+### "Unable to detect application namespace"
+**Solution**: Ensure `composer.json` has:
+```json
+"autoload": {
+    "psr-4": {
+        "App\\": "app/"
+    }
+}
+```
+
+### "Component binary not found"
+**Solution**: 
+- File must be named `component` (not `my-component`)
+- Must be executable: `chmod +x component`
+- Don't add `executable` field to `💩.json`
+
+### Commands not showing in THE SHIT
+**Solution**: 
+- Check `💩.json` lists your commands
+- Ensure component is in `💩-components/` directory
+- Component folder name should match manifest name
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes following the Conduit architecture patterns
-4. Run tests: `./vendor/bin/pest`
-5. Run certification: `./component certify`
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+2. Create your feature branch (`git checkout -b feature/amazing`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing`)
+5. Open a Pull Request
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see LICENSE file for details
 
-## 🙏 Acknowledgments
+## 🙏 Credits
 
-- Built on [Laravel Zero](https://laravel-zero.com/) framework
-- Powered by [Conduit Universal Interfaces](https://github.com/jordanpartridge/conduit-interfaces)
-- Part of the [Conduit Developer Liberation System](https://github.com/jordanpartridge/conduit)
+Built with [Laravel Zero](https://laravel-zero.com) by THE SHIT community.
+
+---
+
+*Remember: THE SHIT components should do one thing perfectly. Keep it simple, keep it focused.*

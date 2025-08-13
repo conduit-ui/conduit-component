@@ -23,9 +23,9 @@
         "jordanpartridge/github-client": "For GitHub integration components"
     },
     "require-dev": {
-        "laravel/pint": "^1.22",
-        "mockery/mockery": "^1.6.12",
-        "pestphp/pest": "^3.8.2"
+        "laravel/pint": "^1.24",
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^3.8"
     },
     "autoload": {
         "psr-4": {
