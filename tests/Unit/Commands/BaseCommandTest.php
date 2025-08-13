@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Commands;
 
-use Tests\TestCase;
 use App\Commands\BaseCommand;
 use LaravelZero\Framework\Commands\Command;
+use Tests\TestCase;
 
 class BaseCommandTest extends TestCase
 {
@@ -33,10 +33,10 @@ class BaseCommandTest extends TestCase
     {
         $reflection = new \ReflectionClass(BaseCommand::class);
         $constructor = $reflection->getConstructor();
-        
+
         // Constructor should exist (inherited from Command)
         $this->assertNotNull($constructor);
-        
+
         // Check that no methods require ConduitInterfaces
         foreach ($reflection->getMethods() as $method) {
             $docComment = $method->getDocComment();

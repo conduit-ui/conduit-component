@@ -1,12 +1,5 @@
 <?php
 
-use LaravelZero\Framework\Commands\BuildCommand;
-use LaravelZero\Framework\Commands\InstallCommand;
-use LaravelZero\Framework\Commands\MakeCommand;
-use LaravelZero\Framework\Commands\RenameCommand;
-use LaravelZero\Framework\Commands\TestMakeCommand;
-use NunoMaduro\Collision\Adapters\Laravel\Commands\TestCommand;
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -19,7 +12,7 @@ return [
     |
     */
 
-    "default" => NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
+    'default' => NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -32,8 +25,8 @@ return [
     |
     */
 
-    "paths" => [
-        app_path("Commands"),
+    'paths' => [
+        app_path('Commands'),
         // Add additional command discovery paths
     ],
 
@@ -48,7 +41,7 @@ return [
     |
     */
 
-    "add" => [
+    'add' => [
         //
     ],
 
@@ -63,7 +56,7 @@ return [
     |
     */
 
-    "hidden" => [
+    'hidden' => [
         NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
         Symfony\Component\Console\Command\DumpCompletionCommand::class,
         Symfony\Component\Console\Command\HelpCommand::class,
@@ -85,11 +78,11 @@ return [
     | Commands listed here will be available through Conduit delegation when
     | the delegation system is released. Commands extending DelegatedCommand
     | and marked as publishable will be automatically discovered and added here.
-    | 
+    |
     | Liberation Philosophy: Components work standalone AND with Conduit
     |
     */
-    "published" => [
+    'published' => [
         // Commands marked as publishable via DelegatedCommand::$publishable = true
         // Will be automatically discovered and registered for delegation
         // Example: 'component:example' => App\Commands\ExampleCommand::class,
@@ -106,7 +99,7 @@ return [
     |
     */
 
-    "remove" => [
+    'remove' => [
         //
     ],
 ];

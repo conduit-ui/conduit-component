@@ -1,7 +1,5 @@
 <?php
 
-use Tests\TestCase;
-
 describe('Basic Functionality Certification', function () {
     it('can execute the component binary without errors', function () {
         $process = shell_exec('./component --version 2>&1');
@@ -29,17 +27,17 @@ describe('Basic Functionality Certification', function () {
         // Get list of commands
         $result = $this->artisan('list');
         $output = $result->getDisplay();
-        
+
         // Extract command names from output
         preg_match_all('/^\s*([a-z:]+)\s+/m', $output, $matches);
         $commands = $matches[1] ?? [];
-        
+
         // Filter out system commands that might require input
         $excludeCommands = ['help', 'completion', 'list'];
         $testableCommands = array_diff($commands, $excludeCommands);
-        
+
         foreach ($testableCommands as $command) {
-            if (!empty($command)) {
+            if (! empty($command)) {
                 // Test that command can be called with --help without error
                 $helpResult = $this->artisan("$command --help");
                 expect($helpResult->getExitCode())->toBeLessThan(2, "Command '$command' should handle --help gracefully");
@@ -49,7 +47,7 @@ describe('Basic Functionality Certification', function () {
 
     it('has proper command registration', function () {
         $commandsConfig = require base_path('config/commands.php');
-        
+
         expect($commandsConfig)->toBeArray();
         expect($commandsConfig)->toHaveKeys(['default', 'paths', 'add', 'hidden', 'published', 'remove']);
     });
@@ -67,7 +65,7 @@ describe('Basic Functionality Certification', function () {
             'config/commands.php',
             'config/app.php',
             'composer.json',
-            'tests'
+            'tests',
         ];
 
         foreach ($essentialFiles as $file) {

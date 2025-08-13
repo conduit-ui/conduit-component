@@ -13,17 +13,17 @@ class Test extends TestCommand
      *
      * @var string
      */
-
     public function __construct()
     {
         parent::__construct();
     }
+
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Run the component tests";
+    protected $description = 'Run the component tests';
 
     /**
      * Execute the console command.

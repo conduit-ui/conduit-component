@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Commands;
 
-use Tests\TestCase;
 use App\Commands\DelegatedCommand;
 use LaravelZero\Framework\Commands\Command;
+use Tests\TestCase;
 
 class DelegatedCommandTest extends TestCase
 {
@@ -33,7 +33,7 @@ class DelegatedCommandTest extends TestCase
     {
         $reflection = new \ReflectionClass(DelegatedCommand::class);
         $this->assertTrue($reflection->hasMethod('isDelegated'));
-        
+
         $method = $reflection->getMethod('isDelegated');
         $this->assertTrue($method->isProtected());
         $this->assertEquals('bool', $method->getReturnType()->getName());
@@ -45,7 +45,7 @@ class DelegatedCommandTest extends TestCase
     public function test_delegated_command_doesnt_override_execute(): void
     {
         $reflection = new \ReflectionClass(DelegatedCommand::class);
-        
+
         // The execute method should not be declared in DelegatedCommand
         // (it was causing signature mismatch errors)
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -54,7 +54,7 @@ class DelegatedCommandTest extends TestCase
                 $this->fail('DelegatedCommand should not declare its own execute method');
             }
         }
-        
+
         $this->assertTrue(true); // Test passed if we get here
     }
 
@@ -64,29 +64,31 @@ class DelegatedCommandTest extends TestCase
     public function test_delegation_check_uses_environment(): void
     {
         // Create a concrete test implementation
-        $command = new class extends DelegatedCommand {
+        $command = new class extends DelegatedCommand
+        {
             protected $signature = 'test:command';
+
             protected $description = 'Test command';
-            
+
             public function handle()
             {
                 return 0;
             }
-            
-            public function testIsDelegated(): bool
+
+            public function test_is_delegated(): bool
             {
                 return $this->isDelegated();
             }
         };
-        
+
         // Test without environment variable
         putenv('CONDUIT_DELEGATION=');
         $this->assertFalse($command->testIsDelegated());
-        
+
         // Test with delegation enabled
         putenv('CONDUIT_DELEGATION=true');
         $this->assertTrue($command->testIsDelegated());
-        
+
         // Clean up
         putenv('CONDUIT_DELEGATION=');
     }

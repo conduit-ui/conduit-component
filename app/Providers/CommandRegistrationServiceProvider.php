@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Console\Application as Artisan;
 use App\Contracts\CommandInterface;
-use Symfony\Component\Finder\Finder;
+use Illuminate\Console\Application as Artisan;
+use Illuminate\Support\ServiceProvider;
 use ReflectionClass;
+use Symfony\Component\Finder\Finder;
 
 class CommandRegistrationServiceProvider extends ServiceProvider
 {
@@ -31,20 +31,20 @@ class CommandRegistrationServiceProvider extends ServiceProvider
 
         foreach ($commandPaths as $path) {
             $namespace = 'App\\Commands';
-            $finder = new Finder();
+            $finder = new Finder;
             $finder->in($path)->name('*Command.php');
 
             foreach ($finder as $file) {
                 $relativePath = str_replace([$path, '.php'], '', $file->getRealPath());
-                $className = $namespace . str_replace('/', '\\', $relativePath);
+                $className = $namespace.str_replace('/', '\\', $relativePath);
 
                 if (class_exists($className)) {
                     $reflection = new ReflectionClass($className);
-                    
+
                     // Only register concrete commands that implement CommandInterface
-                    if (!$reflection->isAbstract() && $reflection->implementsInterface(CommandInterface::class)) {
+                    if (! $reflection->isAbstract() && $reflection->implementsInterface(CommandInterface::class)) {
                         $command = $this->app->make($className);
-                        
+
                         // Dynamic publishability check
                         if ($command->isPublishable()) {
                             $this->app->make(Artisan::class)->add($command);

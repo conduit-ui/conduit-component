@@ -2,8 +2,8 @@
 
 namespace Tests\Integration;
 
-use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use Tests\TestCase;
 
 class ComponentBootstrapTest extends TestCase
 {
@@ -46,7 +46,7 @@ class ComponentBootstrapTest extends TestCase
         $this->assertTrue(class_exists(\App\Commands\BaseCommand::class));
         $this->assertTrue(class_exists(\App\Commands\DelegatedCommand::class));
         $this->assertTrue(class_exists(\App\Commands\ExampleCommand::class));
-        
+
         // Non-existent namespaces should not be loaded
         $this->assertFalse(class_exists(\ConduitComponents\Spotify\SpotifyService::class));
         $this->assertFalse(class_exists(\JordanPartridge\ConduitInterfaces\AbstractConduitCommand::class));
@@ -57,8 +57,8 @@ class ComponentBootstrapTest extends TestCase
      */
     public function test_component_cli_execution(): void
     {
-        $output = shell_exec('php ' . base_path('component') . ' list 2>&1');
-        
+        $output = shell_exec('php '.base_path('component').' list 2>&1');
+
         $this->assertNotNull($output);
         $this->assertStringContainsString('Component', $output);
         $this->assertStringContainsString('example', $output);
@@ -73,11 +73,11 @@ class ComponentBootstrapTest extends TestCase
     {
         // Revert manifest to template version for testing
         $manifestContent = File::get(base_path('💩.json'));
-        
+
         // For testing, we check that our test manifest doesn't have executable field
         $manifest = json_decode($manifestContent, true);
         $this->assertArrayNotHasKey('executable', $manifest);
-        
+
         // Check that the manifest uses placeholder pattern
         $this->assertStringContainsString('{{', $manifestContent);
         $this->assertStringContainsString('}}', $manifestContent);
@@ -90,16 +90,16 @@ class ComponentBootstrapTest extends TestCase
     {
         $composerPath = base_path('composer.json');
         $composer = json_decode(file_get_contents($composerPath), true);
-        
+
         // Check required fields
         $this->assertArrayHasKey('name', $composer);
         $this->assertArrayHasKey('require', $composer);
         $this->assertArrayHasKey('autoload', $composer);
-        
+
         // Check PHP version requirement
         $this->assertArrayHasKey('php', $composer['require']);
         $this->assertStringContainsString('8.2', $composer['require']['php']);
-        
+
         // Check Laravel Zero requirement
         $this->assertArrayHasKey('laravel-zero/framework', $composer['require']);
     }

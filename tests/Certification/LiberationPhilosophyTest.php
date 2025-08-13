@@ -1,6 +1,5 @@
 <?php
 
-use Tests\TestCase;
 use App\Contracts\CommandInterface;
 use Illuminate\Support\Facades\File;
 
@@ -9,7 +8,7 @@ describe('Liberation Philosophy Certification', function () {
         // Test that commands can run both standalone and through conduit
         $this->artisan('list')
             ->assertExitCode(0);
-            
+
         // Verify the component can be called directly
         $directResult = shell_exec('./component list 2>&1');
         expect($directResult)->not()->toBeNull();
@@ -18,31 +17,31 @@ describe('Liberation Philosophy Certification', function () {
 
     it('ensures commands provide liberation metrics', function () {
         $commandPath = app_path('Commands');
-        
-        if (!File::exists($commandPath)) {
+
+        if (! File::exists($commandPath)) {
             $this->markTestSkipped('No commands directory found');
         }
 
-        $commandFiles = File::glob($commandPath . '/*.php');
-        
+        $commandFiles = File::glob($commandPath.'/*.php');
+
         foreach ($commandFiles as $file) {
-            $className = 'App\\Commands\\' . pathinfo($file, PATHINFO_FILENAME);
-            
+            $className = 'App\\Commands\\'.pathinfo($file, PATHINFO_FILENAME);
+
             if (class_exists($className)) {
                 $reflection = new ReflectionClass($className);
-                
-                if ($reflection->implementsInterface(CommandInterface::class) && !$reflection->isAbstract()) {
+
+                if ($reflection->implementsInterface(CommandInterface::class) && ! $reflection->isAbstract()) {
                     $command = $reflection->newInstance();
                     $metrics = $command->getLiberationMetrics();
-                    
+
                     expect($metrics)->toBeArray("Liberation metrics should be array for {$className}");
-                    
+
                     // Check for key liberation metrics
-                    expect($metrics)->toHaveKey('complexity_reduction', 
+                    expect($metrics)->toHaveKey('complexity_reduction',
                         "Command {$className} should report complexity reduction metric");
-                    expect($metrics)->toHaveKey('time_saved_per_execution', 
+                    expect($metrics)->toHaveKey('time_saved_per_execution',
                         "Command {$className} should report time savings metric");
-                        
+
                     // Validate metric values are reasonable
                     if (isset($metrics['complexity_reduction'])) {
                         expect($metrics['complexity_reduction'])->toBeNumeric(
@@ -50,7 +49,7 @@ describe('Liberation Philosophy Certification', function () {
                         expect($metrics['complexity_reduction'])->toBeGreaterThanOrEqual(0,
                             "Complexity reduction should be non-negative for {$className}");
                     }
-                    
+
                     if (isset($metrics['time_saved_per_execution'])) {
                         expect($metrics['time_saved_per_execution'])->toBeNumeric(
                             "Time saved should be numeric for {$className}");
@@ -64,30 +63,30 @@ describe('Liberation Philosophy Certification', function () {
 
     it('validates commands capture meaningful knowledge', function () {
         $commandPath = app_path('Commands');
-        
-        if (!File::exists($commandPath)) {
+
+        if (! File::exists($commandPath)) {
             $this->markTestSkipped('No commands directory found');
         }
 
-        $commandFiles = File::glob($commandPath . '/*.php');
-        
+        $commandFiles = File::glob($commandPath.'/*.php');
+
         foreach ($commandFiles as $file) {
-            $className = 'App\\Commands\\' . pathinfo($file, PATHINFO_FILENAME);
-            
+            $className = 'App\\Commands\\'.pathinfo($file, PATHINFO_FILENAME);
+
             if (class_exists($className)) {
                 $reflection = new ReflectionClass($className);
-                
-                if ($reflection->implementsInterface(CommandInterface::class) && !$reflection->isAbstract()) {
+
+                if ($reflection->implementsInterface(CommandInterface::class) && ! $reflection->isAbstract()) {
                     $command = $reflection->newInstance();
                     $knowledge = $command->captureKnowledge();
-                    
+
                     expect($knowledge)->toBeArray("Knowledge should be array for {$className}");
-                    
+
                     // Validate required knowledge fields
                     expect($knowledge)->toHaveKey('command', "Knowledge should include command name for {$className}");
                     expect($knowledge)->toHaveKey('description', "Knowledge should include description for {$className}");
                     expect($knowledge)->toHaveKey('tags', "Knowledge should include tags for {$className}");
-                    
+
                     // Validate knowledge content quality
                     expect($knowledge['command'])->not()->toBeEmpty("Command name should not be empty for {$className}");
                     expect($knowledge['description'])->not()->toBeEmpty("Description should not be empty for {$className}");
@@ -103,7 +102,7 @@ describe('Liberation Philosophy Certification', function () {
         $this->artisan('list')
             ->expectsOutput(function ($output) {
                 // Should show available commands with descriptions
-                return str_contains($output, 'Available commands:') || 
+                return str_contains($output, 'Available commands:') ||
                        str_contains($output, 'USAGE:');
             })
             ->assertExitCode(0);
@@ -111,35 +110,35 @@ describe('Liberation Philosophy Certification', function () {
 
     it('validates publishability logic is meaningful', function () {
         $commandPath = app_path('Commands');
-        
-        if (!File::exists($commandPath)) {
+
+        if (! File::exists($commandPath)) {
             $this->markTestSkipped('No commands directory found');
         }
 
-        $commandFiles = File::glob($commandPath . '/*.php');
+        $commandFiles = File::glob($commandPath.'/*.php');
         $publishableCount = 0;
         $totalCommands = 0;
-        
+
         foreach ($commandFiles as $file) {
-            $className = 'App\\Commands\\' . pathinfo($file, PATHINFO_FILENAME);
-            
+            $className = 'App\\Commands\\'.pathinfo($file, PATHINFO_FILENAME);
+
             if (class_exists($className)) {
                 $reflection = new ReflectionClass($className);
-                
-                if ($reflection->implementsInterface(CommandInterface::class) && !$reflection->isAbstract()) {
+
+                if ($reflection->implementsInterface(CommandInterface::class) && ! $reflection->isAbstract()) {
                     $totalCommands++;
                     $command = $reflection->newInstance();
-                    
+
                     if ($command->isPublishable()) {
                         $publishableCount++;
                     }
                 }
             }
         }
-        
+
         // At least some commands should be publishable if any exist
         if ($totalCommands > 0) {
-            expect($publishableCount)->toBeGreaterThan(0, 
+            expect($publishableCount)->toBeGreaterThan(0,
                 'At least some commands should be publishable to demonstrate liberation philosophy');
         }
     });
@@ -148,17 +147,17 @@ describe('Liberation Philosophy Certification', function () {
         // Check that the component has automation-focused commands
         $result = $this->artisan('list');
         $output = $result->getDisplay();
-        
+
         // Look for common automation patterns
         $automationIndicators = [
             'make:', // Code generation
             'test',  // Automated testing
-            'build', // Automated building  
+            'build', // Automated building
             'deploy', // Automated deployment
             'generate', // Code generation
             'create', // Resource creation
         ];
-        
+
         $foundAutomation = false;
         foreach ($automationIndicators as $indicator) {
             if (str_contains(strtolower($output), $indicator)) {
@@ -166,7 +165,7 @@ describe('Liberation Philosophy Certification', function () {
                 break;
             }
         }
-        
+
         // Component should demonstrate some form of automation
         expect($foundAutomation)->toBeTrue(
             'Component should include automation-focused commands to align with liberation philosophy');
@@ -177,7 +176,7 @@ describe('Liberation Philosophy Certification', function () {
         $componentPath = base_path('component');
         expect(file_exists($componentPath))->toBeTrue('Component should have an accessible binary');
         expect(is_executable($componentPath))->toBeTrue('Component binary should be executable');
-        
+
         // Test that it provides helpful output
         $helpOutput = shell_exec('./component --help 2>&1');
         expect($helpOutput)->not()->toBeNull();

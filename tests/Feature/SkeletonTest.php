@@ -52,9 +52,9 @@ class SkeletonTest extends TestCase
     {
         $manifestPath = base_path('💩.json');
         $this->assertFileExists($manifestPath);
-        
+
         $manifest = json_decode(file_get_contents($manifestPath), true);
-        
+
         $this->assertIsArray($manifest);
         $this->assertArrayHasKey('name', $manifest);
         $this->assertArrayHasKey('description', $manifest);
@@ -70,9 +70,9 @@ class SkeletonTest extends TestCase
     {
         $composerPath = base_path('composer.json');
         $this->assertFileExists($composerPath);
-        
+
         $composer = json_decode(file_get_contents($composerPath), true);
-        
+
         $this->assertArrayHasKey('autoload', $composer);
         $this->assertArrayHasKey('psr-4', $composer['autoload']);
         $this->assertArrayHasKey('App\\', $composer['autoload']['psr-4']);
@@ -95,7 +95,7 @@ class SkeletonTest extends TestCase
     {
         $delegatedCommand = new \ReflectionClass(\App\Commands\DelegatedCommand::class);
         $interfaces = $delegatedCommand->getInterfaces();
-        
+
         // Should not implement any interfaces (besides those inherited from parent)
         foreach ($interfaces as $interface) {
             $this->assertStringNotContainsString('ConduitInterfaces', $interface->getName());
